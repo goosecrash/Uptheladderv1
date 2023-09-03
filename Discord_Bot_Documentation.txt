@@ -1,0 +1,85 @@
+# Discord Bot Project
+
+## Overview
+This Discord bot provides a variety of functionalities, such as command execution, user interactions, and database logging. The bot is implemented in Python using the `discord` and `sqlite3` libraries.
+
+## Table of Contents
+- [Installation](#installation)
+- [Features](#features)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Installation
+
+### Requirements
+- Python 3.x
+- discord.py library
+- sqlite3
+
+To install the required Python packages, run:
+\`\`\`bash
+pip install -r requirements.txt
+\`\`\`
+
+## Features
+
+### Command Logging
+Logs each command executed by users. The logs are saved in an SQLite database named `command_log.db`.
+
+```python
+# Create a new SQLite database for logging commands
+command_log_conn = sqlite3.connect('command_log.db')
+
+# Create a table to log commands
+command_log_cursor = command_log_conn.cursor()
+command_log_cursor.execute('''
+CREATE TABLE IF NOT EXISTS command_log (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    command_name TEXT NOT NULL,
+    execution_time TEXT NOT NULL,
+    user_id TEXT NOT NULL,
+    server_id TEXT NOT NULL
+);
+''')
+command_log_conn.commit()
+```
+
+### Rate Limiting
+Implements a simple rate-limiting mechanism to prevent command abuse.
+
+```python
+# Simple rate limiting
+rate_limit = {}
+def check_rate_limit(user_id):
+    if user_id in rate_limit:
+        last_time = rate_limit[user_id]
+        if time.time() - last_time < 10:  # 10 seconds cooldown
+            return True
+    rate_limit[user_id] = time.time()
+    return False
+```
+
+### Error Handling
+Provides basic error-handling features with descriptive messages.
+
+```python
+# Simple error handling
+async def handle_error(ctx, error_message):
+    await ctx.send(f'An error occurred: {error_message}')
+```
+
+## Usage
+
+To run the bot, execute the following command:
+\`\`\`bash
+python bot.py
+\`\`\`
+
+## Contributing
+
+Feel free to submit pull requests or issues to improve the bot.
+
+## License
+
+This project is under the MIT License. See [LICENSE.md](LICENSE.md) for more details.
