@@ -227,7 +227,7 @@ async def feedback_command(ctx: SlashContext, message: str):
     # Check if the user is whitelisted or a developer
     if ctx.author.id in WHITELISTED_IDS:
         # Send the embed to the developer's channel or DM (replace 'developer_channel_id' with the actual ID)
-        developer_channel = await ctx.bot.fetch_channel(developer_channel_id)
+        developer_channel = await ctx.bot.fetch_channel(468965192408236054)
         await developer_channel.send(embed=embed)
 
     # Send a confirmation message to the user
