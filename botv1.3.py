@@ -14,6 +14,7 @@ load_dotenv()
 # Store the bot's start time
 bot_start_time = time.time()
 
+WHITELISTED_IDS = [468965192408236054]
 
 
 # Fetch the bot token from environment variables
@@ -203,6 +204,35 @@ async def create_corporation(ctx: SlashContext, corporation_name: str):
             await ctx.send("You do not have enough capital to create a corporation.")
     else:
         await ctx.send("You are not registered in the virtual economy system. Use the /start command to register.")
+
+
+@slash_command(
+    name="feedback",
+    description="Send feedback to the developer."
+)
+@slash_option(
+    name="message",
+    description="Your feedback message",
+    required=True,
+    opt_type=OptionType.STRING
+)
+async def feedback_command(ctx: SlashContext, message: str):
+    # Create an embed
+    embed = Embed(
+        title="New Feedback Received",
+        description=f"From: {ctx.author.mention}\nMessage: {message}",
+        color=0x00FF00
+    )
+
+    # Check if the user is whitelisted or a developer
+    if ctx.author.id in WHITELISTED_IDS:
+        # Send the embed to the developer's channel or DM (replace 'developer_channel_id' with the actual ID)
+        developer_channel = await ctx.bot.fetch_channel(developer_channel_id)
+        await developer_channel.send(embed=embed)
+
+    # Send a confirmation message to the user
+    await ctx.send("Your feedback has been sent to the developer.")
+
 
 
 
