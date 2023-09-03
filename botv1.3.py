@@ -207,31 +207,18 @@ async def create_corporation(ctx: SlashContext, corporation_name: str):
 
 
 @slash_command(
-    name="feedback",
-    description="Send feedback to the developer."
+    name="send_dm",
+    description="Send a DM to the user who invoked the command",
 )
-@slash_option(
-    name="message",
-    description="Your feedback message",
-    required=True,
-    opt_type=OptionType.STRING
-)
-async def feedback_command(ctx: SlashContext, message: str):
-    # Create an embed
-    embed = Embed(
-        title="New Feedback Received",
-        description=f"From: {ctx.author.mention}\nMessage: {message}",
-        color=0x00FF00
-    )
+async def send_dm(ctx, message: str):
+    user = ctx.author
+    await user.send(f"Hello, {user.mention}! Here's your DM: {message}")
 
-    # Check if the user is whitelisted or a developer
-    if ctx.author.id in WHITELISTED_IDS:
-        # Send the embed to the developer's channel or DM (replace 'developer_channel_id' with the actual ID)
-        developer_channel = await ctx.bot.fetch_channel(468965192408236054)
-        await developer_channel.send(embed=embed)
 
-    # Send a confirmation message to the user
-    await ctx.send("Your feedback has been sent to the developer.")
+
+
+
+
 
 
 
