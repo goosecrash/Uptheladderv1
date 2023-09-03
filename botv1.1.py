@@ -251,7 +251,7 @@ async def on_ready():
         print(f"- {guild.name} (ID: {guild.id})")
     
     total_money = get_total_money_circulation()
-    await bot.change_presence(activity=f"{total_money} being circulated")
+    await bot.change_presence(activity="Developer is hard at work!")
 
 
 bot = Client(token=bot_token)
