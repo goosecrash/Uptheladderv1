@@ -480,22 +480,7 @@ async def help_command(ctx: SlashContext):
     # ... [additional commands and descriptions]
     await ctx.send(embed=embed.to_dict())
 
-@slash_command(name="feedback", description="Send your feedback")
-@slash_option(
-    name="content",
-    description="Your feedback content",
-    required=True,
-    opt_type=OptionType.STRING
-)
-async def feedback_command(ctx: SlashContext, content: str):
-    whitelisted_id = 468965192408236054  # Replace with the ID where you want to send feedback
 
-    user: User = ctx.client.get_user(whitelisted_id)
-    if user:
-        await user.send(f"Feedback received from {ctx.author.name}: {content}")
-        await ctx.send("Feedback sent successfully!")
-    else:
-        await ctx.send("Could not send feedback. Please try again later.")
 
 
 
