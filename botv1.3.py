@@ -248,6 +248,58 @@ async def help_command(ctx: SlashContext):
 
 
 
+
+# ======================
+# Gambling Command Block
+# ======================
+
+# Required Imports for Gambling Command
+from interactions import slash_command, SlashContext, OptionType, slash_option
+import random
+
+# Gambling Command using slash command syntax
+@slash_command(name="gamble", description="Try your luck with gambling!")
+@slash_option(
+    name="amount",
+    description="Amount of virtual currency to gamble",
+    required=True,
+    opt_type=OptionType.INTEGER
+)
+async def gamble_command(ctx: SlashContext, amount: int):
+    """Handle the gambling command."""
+    
+    # Fetch the user's balance from the database
+    user_id = ctx.author.id
+    cursor.execute("SELECT balance FROM users WHERE user_id = ?", (user_id,))
+    user_balance = cursor.fetchone()
+    
+    # Check if the user is registered in the virtual economy
+    if not user_balance:
+        await ctx.send("You are not registered in the virtual economy.")
+        return
+    
+    user_balance = user_balance[0]
+    
+    # Validate user's currency balance
+    if amount > user_balance:
+        await ctx.send("You don't have enough currency to gamble this amount.")
+        return
+
+    # Perform the gamble and determine the outcome
+    outcome = random.choice(['win', 'lose'])
+    
+    if outcome == 'win':
+        new_balance = user_balance + amount
+        await ctx.send(f"Congratulations, you won! Your new balance is {new_balance}.")
+    else:
+        new_balance = user_balance - amount
+        await ctx.send(f"Sorry, you lost. Your new balance is {new_balance}.")
+    
+    # Update the user's balance in the database
+    cursor.execute("UPDATE users SET balance = ? WHERE user_id = ?", (new_balance, user_id))
+    conn.commit()
+
+# End of Gambling Command Block
 if __name__ == "__main__":
     # Store the bot's start time for uptime calculation
     start_time = datetime.utcnow()
